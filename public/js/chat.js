@@ -60,7 +60,7 @@ socket.on("locationMessage", (location) => {
     autoScroll()
 })
 socket.on("roomData", ({ room, users }) => {
-    console.log(room, users);
+
     const html = Mustache.render(sideBarTemplate, {
         room,
         users
