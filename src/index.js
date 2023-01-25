@@ -18,11 +18,13 @@ app.use(express.static(publicDirectoryPath))
 
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
-
+    const filter = new Filter()
 
     socket.on("join", ({ username, room }, callback) => {
+        if (filter.isProfane(username) || filter.isProfane(room)) {
+            return callback('Profanity is not allowed!')
+        }
         const { error, user } = addUser({ id: socket.id, username, room })
-        console.log(user);
         if (error) {
             return callback(error)
         }
@@ -41,7 +43,6 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id)
-        const filter = new Filter()
 
         if (filter.isProfane(message)) {
             return callback('Profanity is not allowed!')
