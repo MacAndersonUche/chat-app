@@ -6,7 +6,7 @@
 - [ ] Add Gif Selector to Input 
 - [ ] Add Map Snippet when a user shares location
 - [ ] Add Database to store user messages 
-- [ ] Add Profan words validator for username and room name
+- [X] Add Profane words validator for username and room name
 - [ ] Add JWT and authentication
 - [ ] Add User is typing feature when a user types 
 - [ ] Add Private messaging between user 
