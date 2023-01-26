@@ -1,3 +1,5 @@
+
+
 const socket = io()
 
 const messageForm = document.querySelector("#message-form")
@@ -9,6 +11,7 @@ const messages = document.querySelector("#messages")
 const messageTemplate = document.querySelector("#message-template").innerHTML
 const locationTemplate = document.querySelector("#location-template").innerHTML
 const sideBarTemplate = document.querySelector("#sidebar-template").innerHTML
+const sidebar = document.querySelector("#sidebar")
 
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
@@ -40,6 +43,11 @@ const autoScroll = () => {
 
 }
 
+const redirectToRoom = (e) => {
+    console.log(e);
+    window.location.href = `?username=${username}&room=${e.target.innerHTML}`
+}
+
 
 socket.on("message", (message) => {
     const html = Mustache.render(messageTemplate, {
@@ -59,15 +67,27 @@ socket.on("locationMessage", (location) => {
     messages.insertAdjacentHTML("beforeend", html)
     autoScroll()
 })
-socket.on("roomData", ({ room, users }) => {
+
+
+socket.on("roomData", ({ room, users, rooms }) => {
 
     const html = Mustache.render(sideBarTemplate, {
         room,
-        users
+        users,
     })
-    document.querySelector("#sidebar").innerHTML = html
-})
+    document.querySelector("#sidebar").insertAdjacentHTML("beforeend", html)
 
+    const ul = document.querySelector("#allRooms")
+    rooms.forEach(room => {
+        let li = document.createElement("li")
+        li.innerHTML = `<button id="roomBtns">${room}</button>`;
+        li.onclick = redirectToRoom
+        ul.appendChild(li)
+
+    })
+    console.log(rooms);
+
+})
 
 
 messageForm.addEventListener("submit", (e) => {
@@ -90,7 +110,6 @@ messageForm.addEventListener("submit", (e) => {
 })
 
 locationBtn.addEventListener("click", () => {
-
     if (!navigator.geolocation) return alert("Geolocation is not supported by your browser")
     locationBtn.setAttribute("disabled", "disabled")
     navigator.geolocation.getCurrentPosition((position) => {

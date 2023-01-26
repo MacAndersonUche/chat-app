@@ -1,4 +1,5 @@
 const users = []
+const rooms = []
 
 const addUser = ({ id, username, room }) => {
     username = username.trim().toLowerCase()
@@ -19,7 +20,8 @@ const addUser = ({ id, username, room }) => {
     }
     const user = { id, username, room }
     users.push(user)
-    return { user }
+    !rooms.includes(room) ? rooms.push(room) : rooms
+    return { user, rooms }
 }
 
 
@@ -31,7 +33,6 @@ const removeUser = (id) => {
     }
 }
 const getUser = (id) => {
-    const user = users.find(user => user.id === id)
 
     if (user) {
         return user
@@ -46,11 +47,17 @@ const getUsersInRoom = (room) => {
     return users.filter(user => user.room === room)
 }
 
+const getAllRooms = () => {
+
+    return rooms
+}
+
 
 
 module.exports = {
     addUser,
     removeUser,
     getUser,
-    getUsersInRoom
+    getUsersInRoom,
+    getAllRooms
 }

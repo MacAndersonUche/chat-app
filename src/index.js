@@ -24,7 +24,8 @@ io.on('connection', (socket) => {
         if (filter.isProfane(username) || filter.isProfane(room)) {
             return callback('Profanity is not allowed!')
         }
-        const { error, user } = addUser({ id: socket.id, username, room })
+        const { error, user, rooms } = addUser({ id: socket.id, username, room })
+        console.log(rooms);
         if (error) {
             return callback(error)
         }
@@ -34,9 +35,9 @@ io.on('connection', (socket) => {
         socket.broadcast.to(user.room).emit('message', generateMessage("Admin", `${user.username} has joined!`))
         io.to(user.room).emit("roomData", {
             room: user.room,
+            rooms,
             users: getUsersInRoom(user.room)
         })
-
         callback()
 
     })
