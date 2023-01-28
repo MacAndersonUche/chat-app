@@ -2,7 +2,7 @@
 
 - [ ] Add Sound That Plays When a User Joins a Room
 - [X] Display a list of avialble all rooms users can join 
-- [ ] Fix the bug so when the last user in a room disconnects that room is removed from the rooms array 
+- [X] Fix the bug so when the last user in a room disconnects that room is removed from the rooms array 
 - [ ] Add Unique room password: When a user joins a room, a unique password should be sent out to everyone in that room 
 - [ ] Add User room joining functionality: When a user clicks on a room name from the list, they get prompted to add the password inorder to be redirected to that room 
 - [ ] Add LightBar Indicator next to a User to Show when they are online or offline 

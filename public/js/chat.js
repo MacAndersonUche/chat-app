@@ -75,7 +75,7 @@ socket.on("roomData", ({ room, users, rooms }) => {
         room,
         users,
     })
-    document.querySelector("#sidebar").insertAdjacentHTML("beforeend", html)
+    sidebar.insertAdjacentHTML("beforeend", html)
 
     const ul = document.querySelector("#allRooms")
     rooms.forEach(room => {
