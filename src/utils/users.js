@@ -1,5 +1,8 @@
+const { uuidv4 } = require('uuid');
+
 const users = []
 const rooms = []
+let roomPassword;
 
 const addUser = ({ id, username, room }) => {
     username = username.trim().toLowerCase()
@@ -66,11 +69,18 @@ const deleteRoom = (user) => {
 }
 
 
+const roomPasswordGenerator = () => {
+    roomPassword = uuidv4()
+    return roomPassword
+}
+
+
 module.exports = {
     addUser,
     removeUser,
     getUser,
     getUsersInRoom,
     getAllRooms,
-    deleteRoom
+    deleteRoom,
+    roomPasswordGenerator
 }
