@@ -77,6 +77,7 @@ socket.on('roomData', ({ room, users, rooms }) => {
     })
     document.querySelector('#sidebarUsers').innerHTML = html
     document.querySelector('#sidebarRooms').innerHTML = html2
+    document.querySelector('#sidebarRooms').addEventListener('click', redirectToRoom)
 })
 
 $messageForm.addEventListener('submit', (e) => {
