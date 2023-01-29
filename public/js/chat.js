@@ -13,6 +13,7 @@ const locationMessageTemplate = document.querySelector('#location-message-templa
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 const sidebarTemplate2 = document.querySelector('#sidebar-template2').innerHTML
 
+
 // Options
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
