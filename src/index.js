@@ -19,25 +19,22 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection')
     const filter = new Filter()
 
-    socket.on('join', (options, callback) => {
+    socket.on("join", ({ username, room }, callback) => {
         if (filter.isProfane(username) || filter.isProfane(room)) {
             return callback('Profanity is not allowed!')
         }
-        const { error, user } = addUser({ id: socket.id, ...options })
-
+        const { error, user, rooms } = addUser({ id: socket.id, username, room })
         if (error) {
             return callback(error)
         }
-
         socket.join(user.room)
 
-        socket.emit('message', generateMessage('Admin', 'Welcome!'))
-        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`))
-        io.to(user.room).emit('roomData', {
+        socket.emit('message', generateMessage('Welcome!'))
+        socket.broadcast.to(user.room).emit('message', generateMessage("Admin", `${user.username} has joined!`))
+        io.to(user.room).emit("roomData", {
             room: user.room,
             users: getUsersInRoom(user.room)
         })
-
         callback()
     })
 
