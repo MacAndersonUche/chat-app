@@ -83,7 +83,7 @@ socket.on("roomData", ({ room, users, rooms }) => {
         let li = document.createElement("li")
         li.innerHTML = `<button id="roomBtns">${room}</button>`;
         li.onclick = redirectToRoom
-        ul = document.querySelector("#roomBtns")?.innerHTML !== room ? ul.appendChild(li) : ul
+        ul.appendChild(li)
 
     })
 
