@@ -39,6 +39,11 @@ const autoscroll = () => {
     }
 }
 
+const redirectToRoom = (e) => {
+    console.log(e);
+    window.location.href = `?username=${username}&room=${e.target.innerHTML}`
+}
+
 socket.on('message', (message) => {
     console.log(message)
     const html = Mustache.render(messageTemplate, {
@@ -67,7 +72,8 @@ socket.on('roomData', ({ room, users, rooms }) => {
         users
     })
     const html2 = Mustache.render(sidebarTemplate2, {
-        rooms
+        rooms,
+        redirectToRoom
     })
     document.querySelector('#sidebarUsers').innerHTML = html
     document.querySelector('#sidebarRooms').innerHTML = html2
@@ -92,6 +98,8 @@ $messageForm.addEventListener('submit', (e) => {
         console.log('Message delivered!')
     })
 })
+
+document.querySelector("#redirectRoom")?.addEventListener("click", redirectToRoom)
 
 $sendLocationButton.addEventListener('click', () => {
     if (!navigator.geolocation) {
