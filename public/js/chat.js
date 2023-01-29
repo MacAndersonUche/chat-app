@@ -77,15 +77,15 @@ socket.on("roomData", ({ room, users, rooms }) => {
     })
     document.querySelector("#sidebarRooms").innerHTML = html
 
-    const ul = document.querySelector("#allRooms")
-    rooms.forEach(room => {
+    let ul = document.querySelector("#allRooms")
+
+    rooms && rooms.forEach(room => {
         let li = document.createElement("li")
         li.innerHTML = `<button id="roomBtns">${room}</button>`;
         li.onclick = redirectToRoom
-        ul.appendChild(li)
+        ul = document.querySelector("#roomBtns")?.innerHTML !== room ? ul.appendChild(li) : ul
 
     })
-    console.log(rooms);
 
 })
 
