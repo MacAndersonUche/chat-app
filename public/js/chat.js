@@ -73,7 +73,6 @@ socket.on('roomData', ({ room, users, rooms }) => {
     })
     const html2 = Mustache.render(sidebarTemplate2, {
         rooms,
-        redirectToRoom
     })
     document.querySelector('#sidebarUsers').innerHTML = html
     document.querySelector('#sidebarRooms').innerHTML = html2
