@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
                 users: getUsersInRoom(user.room)
             })
 
-            deleteRoom(user)
+            // deleteRoom(user)
         }
     })
 })
