@@ -11,7 +11,7 @@
 - [ ] Add Map Snippet when a user shares location
 - [ ] Add Database to store user messages 
 - [X] Add Profane words validator for username and room name
-- [ ] Add JWT and authentication
+- [ ] Add  authentication using JWT and a Middleware
 - [ ] Add User is typing feature when a user types 
 - [ ] Add Private messaging between user 
 - [ ] Add Jest and React Testing Library
