@@ -1,4 +1,4 @@
-const { uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 const users = []
 const rooms = []
@@ -70,9 +70,10 @@ const deleteRoom = (user) => {
 
 
 const roomPasswordGenerator = () => {
-    roomPassword = uuidv4()
-    return roomPassword
+    return uuidv4().slice(0, 7).toUpperCase()
 }
+
+
 
 
 module.exports = {
