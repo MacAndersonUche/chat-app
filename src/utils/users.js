@@ -38,7 +38,16 @@ const removeUser = (id) => {
 
     }
 }
+const getUser = (id) => {
+    const user = users.find(user => user.id === id)
+    if (user) {
+        return user
+    }
 
+    return {
+        error: "User not found"
+    }
+}
 const getUsersInRoom = (room) => {
     room = room.trim().toLowerCase()
     return users.filter(user => user.room === room)
@@ -70,6 +79,7 @@ const roomPasswordGenerator = () => {
 module.exports = {
     addUser,
     removeUser,
+    getUser,
     getUsersInRoom,
     getAllRooms,
     deleteRoom,
