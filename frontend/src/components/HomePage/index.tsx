@@ -1,4 +1,9 @@
-const HomePage = () => {
+interface Props {
+  setRoomName: (roomName: string) => void;
+  setUserName: (userName: string) => void;
+}
+
+const HomePage = ({ setRoomName, setUserName }: Props) => {
   return (
     <div className="centered-form">
       <div className="centered-form__box">
