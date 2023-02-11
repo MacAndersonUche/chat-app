@@ -8,7 +8,7 @@ import { addUser, removeUser, getUser, getUsersInRoom, deleteRoom, roomPasswordG
 import { ClientToServerEvents, ServerToClientEvents, User } from './utils/types';
 
 const app: Express = express();
-const newHttp = new http.Server(app);
+const newHttp = require('http').Server(app);
 
 
 app.use(cors());
@@ -21,7 +21,7 @@ const io = new Server<
         origin: "http://localhost:3000"
     }
 });
-const port = 4000;
+const port = 4500;
 
 export interface Passed {
     username: string
