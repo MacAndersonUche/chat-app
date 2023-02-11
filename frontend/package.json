@@ -15,7 +15,6 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.6.0",
-    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -41,5 +40,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "main": "index.js",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MacAndersonUche/chat-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MacAndersonUche/chat-app/issues"
+  },
+  "homepage": "https://github.com/MacAndersonUche/chat-app#readme",
+  "description": ""
 }
