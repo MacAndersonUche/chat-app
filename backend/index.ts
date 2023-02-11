@@ -1,20 +1,35 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import http from 'http';
 import socketio from 'socket.io';
 import Filter from 'bad-words';
+import cors from 'cors';
 import { generateMessage, generateLocationMessage } from './utils/messages';
 import { addUser, removeUser, getUser, getUsersInRoom, deleteRoom, roomPasswordGenerator } from './utils/users';
 
 const app: Express = express();
-const server = http.createServer(app)
-const io = socketio(server)
+const newHttp = new http.Server(app);
+
+
+app.use(cors());
+
+const io = require('socket.io')(newHttp, {
+    cors: {
+        origin: "http://localhost:3000"
+    }
+});
 const port = 4000;
+
+export interface Passed {
+    username: string
+    room: string
+}
+
 
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
     const filter = new Filter()
 
-    socket.on("join", ({ username, room }, callback) => {
+    socket.on("join", ({ username, room }: Passed, callback: (text?: string) => string) => {
         if (filter.isProfane(username) || filter.isProfane(room)) {
             return callback('Profanity is not allowed!')
         }
@@ -22,44 +37,48 @@ io.on('connection', (socket) => {
         if (error) {
             return callback(error)
         }
-        socket.join(user.room)
+        socket.join(user?.room)
 
         socket.emit('message', generateMessage('Welcome!'))
-        io.to(user.room).emit('message', generateMessage('Use this code to rejoin the room: ' + roomPasswordGenerator()))
-        socket.broadcast.to(user.room).emit('message', generateMessage("Admin", `${user.username} has joined!`))
-        io.to(user.room).emit("roomData", {
-            room: user.room,
+        io.to(user?.room).emit('message', generateMessage('Use this code to rejoin the room: ' + roomPasswordGenerator()))
+        socket.broadcast.to(user?.room).emit('message', generateMessage("Admin", `${user.username} has joined!`))
+        io.to(user?.room).emit("roomData", {
+            room: user?.room,
             rooms,
-            users: getUsersInRoom(user.room)
+            users: getUsersInRoom(user!.room)
         })
         callback()
     })
 
-    socket.on('sendMessage', (message, callback) => {
+    socket.on('sendMessage', (message: string, callback: (text?: string) => string) => {
         const user = getUser(socket.id)
 
         if (filter.isProfane(message)) {
             return callback('Profanity is not allowed!')
         }
 
-        io.to(user.room).emit('message', generateMessage(user.username, message))
+        io.to(user?.room).emit('message', generateMessage(user.username, message))
         callback()
     })
 
-    socket.on('sendLocation', (coords, callback) => {
+    socket.on('sendLocation', (coords: string, callback: (text?: string) => string) => {
         const user = getUser(socket.id)
-        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
-        callback()
+
+        if (user) {
+            io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
+            callback()
+        }
+
     })
 
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
 
         if (user) {
-            io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
-            io.to(user.room).emit('roomData', {
-                room: user.room,
-                users: getUsersInRoom(user.room)
+            io.to(user?.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
+            io.to(user?.room).emit('roomData', {
+                room: user?.room,
+                users: getUsersInRoom(user?.room)
             })
 
             // deleteRoom(user)
@@ -67,7 +86,7 @@ io.on('connection', (socket) => {
     })
 })
 
-server.listen(port, () => {
+newHttp.listen(port, () => {
     console.log(`Server is up on port ${port}!`)
 })
 

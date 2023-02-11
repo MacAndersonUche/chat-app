@@ -4,6 +4,8 @@ import "./App.css";
 import ChatPage from "./components/ChatPage";
 import HomePage from "./components/HomePage";
 
+import socketIO from "socket.io-client";
+socketIO("http://localhost:4000");
 export function App() {
   return (
     <Routes>

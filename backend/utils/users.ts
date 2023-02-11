@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
+import { User } from './types';
 
-interface User { id: string; username: string; room: string; }
+
 
 const users: User[] = []
 const rooms: string[] = []
