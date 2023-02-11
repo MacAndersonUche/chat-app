@@ -19,6 +19,6 @@
   "homepage": "https://github.com/MacAndersonUche/chat-app#readme",
   "workspaces": [
     "backend",
-    "frontend"
+    "frontendv2"
   ]
 }
