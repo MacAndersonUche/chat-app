@@ -1,10 +1,11 @@
 import express, { Express } from 'express';
 import http from 'http';
-import socketio from 'socket.io';
+import { Server } from "socket.io";
 import Filter from 'bad-words';
 import cors from 'cors';
 import { generateMessage, generateLocationMessage } from './utils/messages';
 import { addUser, removeUser, getUser, getUsersInRoom, deleteRoom, roomPasswordGenerator } from './utils/users';
+import { ClientToServerEvents, ServerToClientEvents } from './utils/types';
 
 const app: Express = express();
 const newHttp = new http.Server(app);
@@ -12,7 +13,10 @@ const newHttp = new http.Server(app);
 
 app.use(cors());
 
-const io = require('socket.io')(newHttp, {
+const io = new Server<
+    ClientToServerEvents,
+    ServerToClientEvents
+>(newHttp, {
     cors: {
         origin: "http://localhost:3000"
     }
@@ -37,12 +41,12 @@ io.on('connection', (socket) => {
         if (error) {
             return callback(error)
         }
-        socket.join(user?.room)
+        socket.join(user!.room)
 
         socket.emit('message', generateMessage('Welcome!'))
-        io.to(user?.room).emit('message', generateMessage('Use this code to rejoin the room: ' + roomPasswordGenerator()))
-        socket.broadcast.to(user?.room).emit('message', generateMessage("Admin", `${user.username} has joined!`))
-        io.to(user?.room).emit("roomData", {
+        io.to(user!.room).emit('message', generateMessage('Use this code to rejoin the room: ' + roomPasswordGenerator()))
+        socket.broadcast.to(user!.room).emit('message', generateMessage("Admin", `${user.username} has joined!`))
+        io.to(user!.room).emit("roomData", {
             room: user?.room,
             rooms,
             users: getUsersInRoom(user!.room)
@@ -61,7 +65,7 @@ io.on('connection', (socket) => {
         callback()
     })
 
-    socket.on('sendLocation', (coords: string, callback: (text?: string) => string) => {
+    socket.on('sendLocation', (coords: { longitude: string, latitude: string }, callback: (text?: string) => string) => {
         const user = getUser(socket.id)
 
         if (user) {
