@@ -1,43 +1,42 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useChatDetails from "../../hooks/useChatDetails";
 
-const HomePage = () => {
-  const { roomName, userName, setUserName, setRoomName } = useChatDetails();
+const Home = () => {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
+  const [room, setRoom] = useState("");
 
-  const submitHandler = (e: { preventDefault: () => void }) => {
-    localStorage.setItem("userName", userName);
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("room", room);
     navigate("/chat");
   };
   return (
-    <div className="centered-form">
-      <div className="centered-form__box">
-        <h1>Join</h1>
-        <form onSubmit={submitHandler}>
-          <label htmlFor="username">Display name</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Display name"
-            required
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          <label htmlFor="roomname">Room</label>
-          <input
-            type="text"
-            name="roomname"
-            placeholder="Room"
-            value={roomName}
-            required
-            onChange={(e) => setRoomName(e.target.value)}
-          />
-          <button>Join</button>
-        </form>
-      </div>
-    </div>
+    <form className="home__container" onSubmit={handleSubmit}>
+      <h2 className="home__header">Sign in to Open Chat</h2>
+      <label htmlFor="username">Username</label>
+      <input
+        type="text"
+        minLength={6}
+        name="username"
+        id="username"
+        className="username__input"
+        value={userName}
+        onChange={(e) => setUserName(e.target.value)}
+      />
+      <label htmlFor="room">Room</label>
+      <input
+        type="text"
+        name="room"
+        id="room"
+        className="username__input"
+        value={room}
+        onChange={(e) => setRoom(e.target.value)}
+      />
+      <button className="home__cta">SIGN IN</button>
+    </form>
   );
 };
 
-export default HomePage;
+export default Home;

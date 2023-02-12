@@ -1,19 +1,23 @@
-const path = require('path')
-const http = require('http')
+
 const express = require('express')
-const socketio = require('socket.io')
 const Filter = require('bad-words')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom, deleteRoom, roomPasswordGenerator } = require('./utils/users')
 
 const app = express()
-const server = http.createServer(app)
-const io = socketio(server)
+const http = require('http').Server(app);
+const cors = require('cors');
+const port = 4400
+app.use(cors());
+const io = require('socket.io')(http, {
+    cors: {
+        origin: "http://localhost:5173"
+    }
+});
 
-const port = process.env.PORT || 3000
-const publicDirectoryPath = path.join(__dirname, '../public')
 
-app.use(express.static(publicDirectoryPath))
+
+
 
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
@@ -24,6 +28,7 @@ io.on('connection', (socket) => {
             return callback('Profanity is not allowed!')
         }
         const { error, user, rooms } = addUser({ id: socket.id, username, room })
+        console.log(username);
         if (error) {
             return callback(error)
         }
@@ -42,8 +47,6 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id)
-
-
         if (filter.isProfane(message)) {
             return callback('Profanity is not allowed!')
         }
@@ -73,6 +76,6 @@ io.on('connection', (socket) => {
     })
 })
 
-server.listen(port, () => {
+http.listen(port, () => {
     console.log(`Server is up on port ${port}!`)
 })

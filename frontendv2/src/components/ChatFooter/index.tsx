@@ -1,26 +1,42 @@
-import useMessages from "../../hooks/useMessages";
+import { useRef, useState } from "react";
+import { Socket } from "socket.io-client";
 
-const ChatFooter = () => {
-  const { message, setMessage } = useMessages();
+interface Props {
+  socket: Socket;
+}
+
+const ChatFooter = ({ socket }: Props) => {
+  const [message, setMessage] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSendMessage = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log({ userName: localStorage.getItem("userName"), message });
+    if (message.trim() && localStorage.getItem("userName")) {
+      socket.emit("message", {
+        text: message,
+        name: localStorage.getItem("userName"),
+        id: `${socket.id}${Math.random()}`,
+        socketID: socket.id,
+      });
+    }
     setMessage("");
   };
+
   return (
-    <div className="compose">
-      <form id="message-form" onSubmit={handleSendMessage}>
+    <div className="chat__footer">
+      <form className="form" onSubmit={handleSendMessage}>
         <input
           name="message"
           placeholder="Message"
           required
+          className="message"
+          ref={inputRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button>Send</button>
+        <button className="sendBtn">Send</button>
+        <button className="sendBtn">Send location</button>
       </form>
-      <button id="send-location">Send location</button>
     </div>
   );
 };
