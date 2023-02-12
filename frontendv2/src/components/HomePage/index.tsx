@@ -2,12 +2,13 @@ import { useNavigate } from "react-router-dom";
 import useChatDetails from "../../hooks/useChatDetails";
 
 const HomePage = () => {
-  const { setUserName, setRoomName } = useChatDetails();
+  const { roomName, userName, setUserName, setRoomName } = useChatDetails();
   const navigate = useNavigate();
 
   const submitHandler = (e: { preventDefault: () => void }) => {
+    localStorage.setItem("userName", userName);
     e.preventDefault();
-    navigate("/chats");
+    navigate("/chat");
   };
   return (
     <div className="centered-form">
@@ -20,6 +21,7 @@ const HomePage = () => {
             name="username"
             placeholder="Display name"
             required
+            value={userName}
             onChange={(e) => setUserName(e.target.value)}
           />
           <label htmlFor="roomname">Room</label>
@@ -27,6 +29,7 @@ const HomePage = () => {
             type="text"
             name="roomname"
             placeholder="Room"
+            value={roomName}
             required
             onChange={(e) => setRoomName(e.target.value)}
           />
