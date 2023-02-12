@@ -16,10 +16,25 @@ export interface MessageType {
 
 const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageType[]>([]);
-
+  const username = localStorage.getItem("userName");
+  const room = localStorage.getItem("room");
   useEffect(() => {
     socket.on("messageResponse", (data) => setMessages([...messages, data]));
+    socket.emit("join", { username, room }, (error: any) => {
+      if (error) {
+        alert(error);
+        location.href = "/";
+      }
+    });
   }, [socket, messages]);
+  useEffect(() => {
+    socket.emit("join", { username, room }, (error: any) => {
+      if (error) {
+        alert(error);
+        location.href = "/";
+      }
+    });
+  }, []);
 
   return (
     <div className="chat">
